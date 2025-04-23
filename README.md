@@ -152,9 +152,9 @@ SQLAlchemy column types are automatically mapped to appropriate Flask-RESTX fiel
 Configure the extension through Flask application config:
 
 ```python
-app.config['API_VERSION'] = "1.0"
 app.config['API_TITLE'] = "My Custom API"  # Default: "Flask-SQLAlchemy API"
 app.config['API_DESCRIPTION'] = "Custom description"  # Default: "Automatically generated API from SQLAlchemy models"
+app.config['API_VERSION'] = "1.0"
 ```
 
 ### Data Validation
