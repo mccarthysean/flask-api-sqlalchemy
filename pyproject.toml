@@ -7,7 +7,7 @@ build-backend = "poetry.core.masonry.api"
 # It is used to manage dependencies, build packages, and publish them to PyPI
 [tool.poetry]
 name = "flask-api-sqlalchemy"
-version = "0.1.0"
+version = "0.1.1"
 description = "Flask extension for automatically generating RESTful APIs from SQLAlchemy models"
 authors = ["Sean McCarthy <sean.mccarthy@hotmail.com>"]
 license = "MIT"
@@ -21,7 +21,7 @@ keywords = ["flask", "sqlalchemy", "api", "restful"]
 [tool.poetry.dependencies]
 # Specify Python version explicitly to ensure consistency
 python = "^3.8"
-flask = "^2.0.0"  # Flask framework
+flask = ">=2.0.0"  # Flask framework
 flask-sqlalchemy = "^3.1.1"
 flask-restx = "^1.3.0"
 marshmallow = "^3.0.0"  # Object serialization/deserialization
