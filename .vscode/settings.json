@@ -1,0 +1,146 @@
+{
+  "python.terminal.activateEnvironment": true,
+  "python.defaultInterpreterPath": "/project/.venv/bin/python",
+  "terminal.integrated.env.linux": {
+    "PYTHONNOUSERSITE": "1"
+  },
+  "python.autoComplete.extraPaths": [
+    "${workspaceFolder}/app",
+    "/project/.venv/lib/python3.12/site-packages",
+  ],
+  "remote.autoForwardPorts": false,
+  "files.eol": "\n",
+  "python.languageServer": "Default",
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": [
+    "tests"
+  ],
+  "editor.defaultFormatter": "charliermarsh.ruff",
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "ruff.organizeImports": true,
+  "ruff.configuration": "../pyproject.toml",
+  "ruff.trace.server": "messages",
+  "notebook.formatOnSave.enabled": true,
+  "notebook.codeActionsOnSave": {
+    "notebook.source.fixAll": "explicit",
+    "notebook.source.organizeImports": "explicit"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.tabSize": 4,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  // "[html]": {
+  //   "editor.defaultFormatter": "samuelcolvin.jinjahtml",
+  //   "editor.tabSize": 2,
+  //   "editor.formatOnSave": true,
+  //   "editor.formatOnPaste": true,
+  //   "editor.codeActionsOnSave": {
+  //     "source.fixAll": "explicit",
+  //     "source.organizeImports": "explicit"
+  //   }
+  // },
+  "djlint.useVenv": false,
+  "djlint.pythonPath": "/project/.venv/bin/python",
+  "[html][django-html][handlebars][hbs][mustache][jinja][jinja-html][nj][njk][nunjucks][twig]": {
+    // "editor.defaultFormatter": "monosans.djlint",
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+  },
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+  },
+  "editor.detectIndentation": false,
+  // "docker.environment": {
+  //   "DOCKER_HOST": "ssh://ubuntu@ec2-52-26-11-170.us-west-2.compute.amazonaws.com"
+  // }
+  "yaml.format.enable": true,
+  "yaml.validate": true,
+  "yaml.schemas": {
+    // any YAML file I open in VS Code will be validated against the Kubernetes schema
+    "kubernetes": "*.yaml"
+  },
+  "yaml.customTags": [
+    "!Ref",
+    "!Sub",
+    "!GetAtt",
+    "!ImportValue",
+    "!FindInMap sequence",
+    "!Join sequence",
+    "!Select sequence",
+    "!Split sequence",
+    "!If sequence"
+  ],
+  "yaml.completion": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "djlint.showInstallError": false,
+  "[nginx]": {
+    "editor.defaultFormatter": "ahmadalli.vscode-nginx-conf",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "explorer.confirmDelete": false,
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+}
