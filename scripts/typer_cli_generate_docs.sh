@@ -16,7 +16,7 @@ echo ""
 echo "Ensure you have typer-cli installed before generating the docs..."
 typer --version
 echo ""
-typer make_responsive_images.main utils docs --output ./docs/index-typer-auto-generated.md --name make-responsive-images
+typer make_responsive_images.main utils docs --output ./docs/index-typer-auto-generated.md --name flask-api-sqlalchemy
 
 echo -e "\n New file created: docs/index-typer-auto-generated.md"
 

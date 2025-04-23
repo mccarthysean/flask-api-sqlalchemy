@@ -9,7 +9,7 @@ echo "Current working directory: $(pwd)"
 
 echo ""
 echo "Running mkdocs build..."
-python -m mkdocs build --config-file ../mkdocs.yml
+../.venv/bin/python -m mkdocs build --config-file ../mkdocs.yml
 
 # Overwrite the root-level README.md file
 echo ""

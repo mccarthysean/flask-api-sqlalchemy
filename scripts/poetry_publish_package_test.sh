@@ -28,6 +28,6 @@ poetry publish --repository testpypi --username __token__ --password $PYPI_TOKEN
 # poetry publish --repository testpypi --username $PYPI_USERNAME_TEST --password $PYPI_PASSWORD_TEST
 
 # Test that it worked
-# pip install --index-url https://test.pypi.org/simple/ make-responsive-images
+# pip install --index-url https://test.pypi.org/simple/ flask-api-sqlalchemy
 
 echo -e "\nDone."
