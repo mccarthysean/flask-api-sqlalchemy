@@ -28,6 +28,8 @@ A Flask extension that automatically generates RESTful APIs from SQLAlchemy mode
 - Automatic mapping of SQLAlchemy types to Flask-RESTX API model types
 - Fully generated REST endpoints for all models
 - Comprehensive test suite
+- Interactive Swagger UI documentation
+- Command-line scaffolding tool for quick setup
 
 ## Installation for Your Project
 
@@ -41,13 +43,14 @@ pip install flask-api-sqlalchemy
 
 ```bash
 pip install -e .
+```
 
-## Usage
+## Quick Start
 
 ```python
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy_api import Api
+from flask_api_sqlalchemy import Api
 
 # Create Flask application
 app = Flask(__name__)
@@ -76,7 +79,108 @@ That's it! The extension automatically:
 3. Generates full CRUD API endpoints for each model
 4. Provides Swagger documentation at `/api/docs`
 
-# LICENSE
+## How It Works
+
+`flask-api-sqlalchemy` analyzes your SQLAlchemy models and automatically creates REST API endpoints with appropriate data validation:
+
+1. **Model Discovery**: The extension finds all SQLAlchemy models in your application
+2. **Type Mapping**: SQLAlchemy column types are mapped to appropriate Flask-RESTX field types
+3. **API Generation**: CRUD endpoints are created for each model with proper validation
+4. **Documentation**: Swagger UI is automatically generated for testing and exploration
+
+## Detailed Usage
+
+### Model Relationships
+
+The extension supports models with relationships:
+
+```python
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='items')
+```
+
+### Generated Endpoints
+
+For each model, the following RESTful endpoints are automatically created:
+
+| HTTP Method | Endpoint          | Description             | Status Codes      |
+|-------------|-------------------|-------------------------| -----------------|
+| GET         | /api/{models}/    | List all resources     | 200 OK           |
+| POST        | /api/{models}/    | Create a new resource  | 201 Created, 400 Bad Request |
+| GET         | /api/{models}/{id} | Get a specific resource | 200 OK, 404 Not Found |
+| PUT         | /api/{models}/{id} | Update a specific resource | 200 OK, 404 Not Found |
+| DELETE      | /api/{models}/{id} | Delete a specific resource | 204 No Content, 404 Not Found |
+
+### Command-Line Interface
+
+This extension includes a helpful CLI for setting up new projects:
+
+```bash
+# Create a new Flask application with flask-api-sqlalchemy
+flask-api-sqlalchemy scaffold --dir myapp
+
+# Show information about models in an existing application
+flask-api-sqlalchemy info app:app
+```
+
+### Type Mapping
+
+SQLAlchemy column types are automatically mapped to appropriate Flask-RESTX fields:
+
+| SQLAlchemy Type | Flask-RESTX Field |
+|-----------------|-------------------|
+| Integer         | fields.Integer    |
+| String          | fields.String     |
+| Text            | fields.String     |
+| Boolean         | fields.Boolean    |
+| Date            | fields.Date       |
+| DateTime        | fields.DateTime   |
+| Float           | fields.Float      |
+| ... and many more |                  |
+
+### Configuration Options
+
+Configure the extension through Flask application config:
+
+```python
+app.config['API_TITLE'] = "My Custom API"  # Default: "Flask-SQLAlchemy API"
+app.config['API_DESCRIPTION'] = "Custom description"  # Default: "Automatically generated API from SQLAlchemy models"
+```
+
+### Data Validation
+
+The extension automatically validates incoming data:
+
+- Required fields (non-nullable columns) are enforced
+- Data types are validated according to SQLAlchemy column types
+- Helpful error messages are returned for invalid data
+
+## Troubleshooting
+
+### No Models Found
+
+If no models are discovered, ensure:
+- Your models inherit from `db.Model`
+- Models are imported before initializing the API
+- The db instance passed to `api.init_app()` is the same one used to define your models
+
+### Missing Endpoints
+
+Check that:
+- The Flask blueprint is registered correctly (happens automatically in `init_app()`)
+- Your app context is active when accessing endpoints
+- Names are correctly pluralized in the URL (e.g., `/api/users/` not `/api/user/`)
+
+## License
 
 MIT License
 

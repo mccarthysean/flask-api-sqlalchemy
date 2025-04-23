@@ -1,4 +1,4 @@
-# src/flask_sqlalchemy_api/__init__.py
+# src/flask_api_sqlalchemy/__init__.py
 # Package initialization file that exposes key functionality
 from .api import Api
 

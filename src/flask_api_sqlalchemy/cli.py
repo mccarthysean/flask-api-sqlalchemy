@@ -1,4 +1,4 @@
-# src/flask_sqlalchemy_api/cli.py
+# src/flask_api_sqlalchemy/cli.py
 # Command-line interface for the extension
 import argparse
 import importlib
@@ -72,7 +72,7 @@ def generate_scaffold(directory: str, name: str) -> None:
     with open(app_path, "w") as f:
         f.write("""from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy_api import Api
+from flask_api_sqlalchemy import Api
 
 # Create Flask application
 app = Flask(__name__)

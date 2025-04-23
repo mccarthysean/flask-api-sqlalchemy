@@ -1,4 +1,4 @@
-# src/flask_sqlalchemy_api/api.py
+# src/flask_api_sqlalchemy/api.py
 # Core API extension class
 import logging
 from http import HTTPStatus
@@ -355,7 +355,7 @@ class Api:
             logger.info(f"Created API endpoints for {model_name}")
 
 
-# src/flask_sqlalchemy_api/exceptions.py
+# src/flask_api_sqlalchemy/exceptions.py
 # Custom exceptions for the extension
 class ApiError(Exception):
     """Base exception for API-related errors."""

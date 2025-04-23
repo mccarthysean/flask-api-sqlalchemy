@@ -1,0 +1,76 @@
+# Dockerfile.dev.flask
+# This Dockerfile is used to build the development image for the app.
+# It is based on the nikolaik/python-nodejs:python3.12-nodejs22-slim image,
+# which is a lightweight image with Python 3.12 and Node.js 22 installed.
+# The image is built using Docker BuildKit for better caching and faster builds.
+FROM python:3.13-slim-bullseye
+
+# Use Docker BuildKit for better caching and faster builds
+ARG DOCKER_BUILDKIT=1
+ARG BUILDKIT_INLINE_CACHE=1
+# Enable BuildKit for Docker-Compose
+ARG COMPOSE_DOCKER_CLI_BUILD=1
+ARG POETRY_VERSION=1.8.5
+
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+SHELL ["/bin/bash", "-c"]
+# Configure apt and install packages
+# I had to add --insecure since curl didn't work...
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends docker.io docker-compose apt-utils build-essential dialog \
+    curl netcat-traditional iputils-ping unzip dos2unix gcc 2>&1 && \
+    # Verify git, process tools, lsb-release (common in install instructions for CLIs) installed
+    apt-get install -y --no-install-recommends sudo git redis-server libpq-dev sass \
+    procps iproute2 lsb-release gnupg apt-transport-https \
+    python3-dev build-essential gcc libcairo2 libcairo2-dev \
+    # For display testing
+    # x11-apps \
+    # xvfb xauth libxext6 libxrender1 libxtst6 \
+    # x11vnc novnc \
+    g++ protobuf-compiler libprotobuf-dev  && \
+    # ssh client so we can ssh when in devcontainer
+    apt-get install -y openssh-client && \
+    # Clean up
+    apt-get autoremove -y && \
+    apt-get clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /project
+
+# # Copy the entrypoint script to install the Python and Node dependencies if the .venv or node_modules directories don't exist
+# COPY --chmod=755 entrypoint.dev.sh entrypoint.dev.local.sh pyproject.toml poetry.lock* package.json pnpm-lock.yaml /project/
+# RUN chmod +x /project/entrypoint.dev.sh /project/entrypoint.dev.local.sh && \
+#     dos2unix /project/entrypoint.dev.sh /project/entrypoint.dev.local.sh
+
+# # Install Node.js dependencies
+# RUN npm install --global corepack@latest typescript pnpm
+# ENV PATH="/project/node_modules/.bin:$PATH"
+# RUN corepack enable pnpm
+
+# Install Poetry with the root user
+# Ensure pip is the latest version
+COPY poetry.lock pyproject.toml ./
+RUN pip install --upgrade pip poetry==$POETRY_VERSION playwright && \
+    # Create a virtualenv at .venv in /project directory so we can easily see the site-packages
+    poetry config virtualenvs.create true && \
+    poetry config virtualenvs.in-project true && \
+    poetry config virtualenvs.path "/project/.venv" && \
+    cd /project && \
+    poetry install --no-interaction --no-ansi
+
+# RUN echo -y pnpm install
+
+# # Install Playwright for testing (must install the Python package first)
+# RUN playwright install-deps && \
+#     playwright install
+
+# Make port 4999 available to the world outside this container
+EXPOSE 4999
+
+# Copy my preferred .bashrc to /root/ so that it's automatically "sourced" when the container starts
+COPY .bashrc /root/
+
+# The following is done in docker-compose.dev.yml
+# ENTRYPOINT ["entrypoint.dev.sh"]
