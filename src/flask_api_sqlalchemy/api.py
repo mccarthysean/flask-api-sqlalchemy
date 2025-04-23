@@ -23,7 +23,37 @@ class Api:
     appropriate CRUD endpoints for each model.
     """
 
-    def __init__(self, app: Optional[Flask] = None, db: Optional[SQLAlchemy] = None):
+    def __init__(
+        self,
+        app: Optional[Flask] = None,
+        db: Optional[SQLAlchemy] = None,
+        doc: Optional[str] = "/docs",
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+        version: Optional[str] = None,
+        prefix: Optional[str] = "",
+        default: Optional[str] = "default",
+        default_label: Optional[str] = "Default namespace",
+        default_id: Optional[str] = None,
+        default_swagger_filename: Optional[str] = "swagger.json",
+        # Optional parameters for API customization
+        terms_url: Optional[str] = None,
+        license: Optional[str] = None,
+        license_url: Optional[str] = None,
+        contact: Optional[str] = None,
+        contact_url: Optional[str] = None,
+        contact_email: Optional[str] = None,
+        authorizations: Optional[dict] = None,
+        security: Optional[dict] = None,
+        validate: Optional[bool] = None,
+        tags: Optional[list] = None,
+        decorators: Optional[list] = None,
+        catch_all_404s: Optional[bool] = False,
+        serve_challenge_on_401: Optional[bool] = False,
+        format_checker: Optional[Any] = None,
+        url_scheme: Optional[str] = None,
+        **kwargs,
+    ) -> None:
         """Initialize the API extension.
 
         Args:
@@ -37,6 +67,33 @@ class Api:
         self.models = {}  # SQLAlchemy models
         self.api_models = {}  # Flask-RESTX API models
         self.namespaces = {}  # API namespaces
+        self.title = title
+        self.description = description
+        self.version = version
+        self.doc = doc
+        self.prefix = prefix
+        self.default = default
+        self.default_label = default_label
+        self.default_id = default_id
+        self.default_swagger_filename = default_swagger_filename
+        self.terms_url = terms_url
+        self.license = license
+        self.license_url = license_url
+        self.contact = contact
+        self.contact_url = contact_url
+        self.contact_email = contact_email
+        self.authorizations = authorizations
+        self.security = security
+        self.validate = validate
+        self.tags = tags
+        self.decorators = decorators
+        self.catch_all_404s = catch_all_404s
+        self.serve_challenge_on_401 = serve_challenge_on_401
+        self.format_checker = format_checker
+        self.url_scheme = url_scheme
+        self.kwargs = kwargs
+
+        self._api = None  # Flask-RESTX API instance
 
         # If app and db are provided, initialize the extension
         if app is not None and db is not None:
@@ -61,12 +118,34 @@ class Api:
         # Create Flask-RESTX API
         self.api = RestxApi(
             self.blueprint,
-            version="1.0",
-            title=app.config.get("API_TITLE", "Flask-SQLAlchemy API"),
-            description=app.config.get(
+            version=self.version or app.config.get("API_VERSION", "1.0"),
+            title=self.title or app.config.get("API_TITLE", "Flask-SQLAlchemy API"),
+            description=self.description
+            or app.config.get(
                 "API_DESCRIPTION", "Automatically generated API from SQLAlchemy models"
             ),
-            doc="/docs",
+            doc=self.doc,
+            default=self.default,
+            terms_url=self.terms_url,
+            license=self.license,
+            license_url=self.license_url,
+            contact=self.contact,
+            contact_url=self.contact_url,
+            contact_email=self.contact_email,
+            authorizations=self.authorizations,
+            security=self.security,
+            validate=self.validate,
+            tags=self.tags,
+            prefix=self.prefix,
+            default_label=self.default_label,
+            default_id=self.default_id,
+            default_swagger_filename=self.default_swagger_filename,
+            decorators=self.decorators,
+            catch_all_404s=self.catch_all_404s,
+            serve_challenge_on_401=self.serve_challenge_on_401,
+            format_checker=self.format_checker,
+            url_scheme=self.url_scheme,
+            **self.kwargs,
         )
 
         # Register the blueprint with the Flask app
