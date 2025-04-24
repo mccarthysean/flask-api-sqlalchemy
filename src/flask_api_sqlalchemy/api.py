@@ -28,11 +28,11 @@ class Api:
         self,
         app: Optional[Flask] = None,
         db: Optional[SQLAlchemy] = None,
+        prefix: Optional[str] = "/api",
         doc: Optional[str] = "/docs",
         title: Optional[str] = None,
         description: Optional[str] = None,
         version: Optional[str] = None,
-        prefix: Optional[str] = "/api",
         default: Optional[str] = "default",
         default_label: Optional[str] = "Default namespace",
         default_id: Optional[str] = None,
@@ -54,6 +54,7 @@ class Api:
         format_checker: Optional[Any] = None,
         url_scheme: Optional[str] = None,
         want_logs: bool = False,
+        disable_delete: bool = False,
         **kwargs,
     ) -> None:
         """Initialize the API extension.
@@ -94,6 +95,7 @@ class Api:
         self.format_checker = format_checker
         self.url_scheme = url_scheme
         self.want_logs = want_logs
+        self.disable_delete = disable_delete
         self.kwargs = kwargs
 
         self._api = None  # Flask-RESTX API instance
@@ -302,6 +304,7 @@ class Api:
 
             # Store db reference for use in inner classes
             db = self.db
+            disable_delete = self.disable_delete  # Pass the flag to the resources
 
             # Create a factory function to ensure each class has its own bound model
             def create_collection_resource(model, model_name):
@@ -320,7 +323,8 @@ class Api:
                     # Store model references securely
                     _model = model
                     _model_name = model_name
-                    want_logs = self.want_logs
+                    _want_logs = self.want_logs
+                    _disable_delete = disable_delete
 
                     @namespace.doc(f"list_{resource_name}")
                     @namespace.marshal_list_with(api_model)
@@ -334,7 +338,7 @@ class Api:
                     @namespace.marshal_with(api_model, code=HTTPStatus.CREATED)
                     def post(self):
                         """Create a new resource."""
-                        if self.want_logs:
+                        if self._want_logs:
                             logger.info(f"Creating a new {self._model_name} instance")
 
                         # Get request data
@@ -396,7 +400,8 @@ class Api:
                     # Store model references securely
                     _model = model
                     _model_name = model_name
-                    want_logs = self.want_logs
+                    _want_logs = self.want_logs
+                    _disable_delete = disable_delete
 
                     @namespace.doc(f"get_{inflection.singularize(resource_name)}")
                     @namespace.marshal_with(api_model)
@@ -415,7 +420,7 @@ class Api:
                     @namespace.marshal_with(api_model)
                     def put(self, id):
                         """Update a specific resource."""
-                        if self.want_logs:
+                        if self._want_logs:
                             logger.debug(f"Updating {self._model_name} with id {id}")
 
                         instance = db.session.query(self._model).get(id)
@@ -440,23 +445,25 @@ class Api:
 
                         return instance
 
-                    @namespace.doc(f"delete_{inflection.singularize(resource_name)}")
-                    @namespace.response(HTTPStatus.NO_CONTENT, f"{model_name} deleted")
-                    def delete(self, id):
-                        """Delete a specific resource."""
-                        # Use session query instead of model.query
-                        instance = db.session.query(self._model).get(id)
-                        if not instance:
-                            namespace.abort(
-                                HTTPStatus.NOT_FOUND,
-                                f"{self._model_name} with id {id} not found",  # noqa: E501
-                            )
+                    # Only include delete method if deletion is not disabled
+                    if not _disable_delete:
+                        @namespace.doc(f"delete_{inflection.singularize(resource_name)}")
+                        @namespace.response(HTTPStatus.NO_CONTENT, f"{model_name} deleted")
+                        def delete(self, id):
+                            """Delete a specific resource."""
+                            # Use session query instead of model.query
+                            instance = db.session.query(self._model).get(id)
+                            if not instance:
+                                namespace.abort(
+                                    HTTPStatus.NOT_FOUND,
+                                    f"{self._model_name} with id {id} not found",  # noqa: E501
+                                )
 
-                        # Delete from database
-                        db.session.delete(instance)
-                        db.session.commit()
+                            # Delete from database
+                            db.session.delete(instance)
+                            db.session.commit()
 
-                        return "", HTTPStatus.NO_CONTENT
+                            return "", HTTPStatus.NO_CONTENT
 
                 return Item
 
