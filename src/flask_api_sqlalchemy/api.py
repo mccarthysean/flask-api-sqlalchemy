@@ -10,6 +10,7 @@ from flask_restx import Api as RestxApi
 from flask_restx import Namespace, Resource, fields
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import inspect
+from sqlalchemy.exc import IntegrityError
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -353,7 +354,22 @@ class Api:
 
                         # Save to database
                         db.session.add(instance)
-                        db.session.commit()
+                        try:
+                            db.session.commit()
+                        except IntegrityError as e:
+                            db.session.rollback()
+                            logger.error(f"Integrity error creating {self._model_name}: {e}")  # noqa: E501
+                            namespace.abort(
+                                HTTPStatus.BAD_REQUEST,
+                                f"Integrity error creating {self._model_name}",
+                            )
+                        except Exception as e:
+                            db.session.rollback()
+                            logger.error(f"Error creating {self._model_name}: {e}")
+                            namespace.abort(
+                                HTTPStatus.INTERNAL_SERVER_ERROR,
+                                f"Error creating {self._model_name}",
+                            )
 
                         return instance, HTTPStatus.CREATED
 
