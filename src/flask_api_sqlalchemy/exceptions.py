@@ -1,4 +1,3 @@
-
 # src/flask_api_sqlalchemy/exceptions.py
 # Custom exceptions for the extension
 class ApiError(Exception):
