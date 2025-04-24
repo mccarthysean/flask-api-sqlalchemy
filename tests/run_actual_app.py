@@ -7,20 +7,18 @@ import random
 import string
 
 from flask import Flask, render_template_string
-from flask_sqlalchemy import SQLAlchemy
 
 # Import the Api class from your package
 from flask_api_sqlalchemy import Api
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-
-# SQLAlchemy models - copied from conftest.py for standalone use
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -78,7 +76,7 @@ def create_app():
     db.Model = Base
 
     # Create API instance
-    api = Api(
+    Api(
         app,
         db,
         title="Flask API SQLAlchemy Debug App",
@@ -146,7 +144,7 @@ def create_app():
             </div>
         </body>
         </html>
-        """)
+        """)  # noqa: E501
 
     return app, db
 
