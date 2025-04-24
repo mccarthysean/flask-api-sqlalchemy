@@ -1,8 +1,9 @@
 # tests/test_extension.py
 # Tests for the API extension
 from flask import Flask
-from flask_api_sqlalchemy import Api
 from flask_sqlalchemy import SQLAlchemy
+
+from flask_api_sqlalchemy import Api
 
 
 def test_extension_initialization(app: Flask, db: SQLAlchemy):
@@ -88,3 +89,19 @@ def test_sqlalchemy_type_mapping(app: Flask, db: SQLAlchemy):
     assert "boolean_col" in api_model
     assert "date_col" in api_model
     assert "datetime_col" in api_model
+
+
+def test_all_types_table(app: Flask, db: SQLAlchemy, api: Api) -> None:
+    """Test that the all_types table is created correctly and has the correct columns"""
+
+    # Get the generated API model
+    api_model = api.api_models["AllTypes"]
+    # Assert that the model is created
+    assert api_model is not None
+
+    # Assert that the table has the correct columns
+    inspector = db.inspect(db.engine)
+    columns = [column["name"] for column in inspector.get_columns("all_types")]
+
+    for column in columns:
+        assert column in api_model
