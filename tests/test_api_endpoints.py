@@ -7,7 +7,6 @@ from http import HTTPStatus
 from flask.testing import FlaskClient
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
-
 from tests.conftest import User
 
 
@@ -108,7 +107,9 @@ def test_update_user(client: FlaskClient, api: Api, db: SQLAlchemy):
     """Test updating a user."""
 
     # Create a user to update
-    original_username: str = "".join(random.choice(string.ascii_letters) for _ in range(10))
+    original_username: str = "".join(
+        random.choice(string.ascii_letters) for _ in range(10)
+    )  # noqa: E501
     original_email: str = f"{original_username}@notarealco.com"
     new_user = User(
         username=original_username,
@@ -120,7 +121,9 @@ def test_update_user(client: FlaskClient, api: Api, db: SQLAlchemy):
     db.session.commit()
 
     # Data for updating the user
-    updated_username: str = "".join(random.choice(string.ascii_letters) for _ in range(10))
+    updated_username: str = "".join(
+        random.choice(string.ascii_letters) for _ in range(10)
+    )  # noqa: E501
     updated_email: str = f"{updated_username}@notarealco.com"
     update_data = {"username": updated_username, "email": updated_email}
 

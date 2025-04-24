@@ -113,7 +113,7 @@ if __name__ == '__main__':
     with open(req_path, "w") as f:
         f.write("""flask>=2.0.0
 flask-sqlalchemy>=3.0.0
-flask-api-sqlalchemy>=0.1.2
+flask-api-sqlalchemy>=0.1.3
 """)
 
     print(f"Scaffold created in {os.path.abspath(directory)}")

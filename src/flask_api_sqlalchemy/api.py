@@ -358,7 +358,9 @@ class Api:
                             db.session.commit()
                         except IntegrityError as e:
                             db.session.rollback()
-                            logger.error(f"Integrity error creating {self._model_name}: {e}")  # noqa: E501
+                            logger.error(
+                                f"Integrity error creating {self._model_name}: {e}"
+                            )  # noqa: E501
                             namespace.abort(
                                 HTTPStatus.BAD_REQUEST,
                                 f"Integrity error creating {self._model_name}",

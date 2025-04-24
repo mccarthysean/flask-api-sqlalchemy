@@ -1,9 +1,8 @@
 # tests/test_extension.py
 # Tests for the API extension
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
 from flask_api_sqlalchemy import Api
+from flask_sqlalchemy import SQLAlchemy
 
 
 def test_extension_initialization(app: Flask, db: SQLAlchemy):

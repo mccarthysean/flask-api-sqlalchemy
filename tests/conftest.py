@@ -5,6 +5,7 @@ from typing import Any, Dict, Generator
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
+from flask_api_sqlalchemy import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import (
     JSON,
@@ -42,8 +43,6 @@ from sqlalchemy.dialects.postgresql import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-from flask_api_sqlalchemy import Api
 
 # engine = create_engine("sqlite:///:memory:")
 Base = declarative_base()
