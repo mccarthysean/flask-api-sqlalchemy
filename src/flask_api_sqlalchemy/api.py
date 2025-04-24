@@ -284,9 +284,7 @@ class Api:
             # Add namespace to API
             self.api.add_namespace(namespace)
 
-            # Store the name of the namespace with the model
-
-            logger.info(f"Generated API model for {model_name}")
+            # logger.info(f"Generated API model for {model_name}")
 
     def _create_endpoints(self) -> None:
         """Create API endpoints for each model."""
