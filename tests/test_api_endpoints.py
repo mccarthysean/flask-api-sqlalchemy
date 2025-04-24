@@ -15,6 +15,21 @@ def test_database_content(db):
     print(f"Users in database: {users}")
 
 
+def test_main_docs_page(client: FlaskClient, api: Api):
+    """Test the main documentation page."""
+
+    docs_url = f"{api.prefix}{api.doc}"
+
+    # Make a GET request to the main documentation page
+    response = client.get(docs_url)
+
+    # Assert that the response is correct
+    assert response.status_code == HTTPStatus.OK
+    # assert b"Flask API SQLAlchemy Debug App" in response.data
+    # assert b"API Documentation" in response.data
+    # assert b"Available API Endpoints" in response.data
+
+
 # @pytest.mark.skip(reason="Not working yet")
 def test_get_users_not_empty(client: FlaskClient, api: Api):
     """Test getting all users when the database is not empty."""
