@@ -194,6 +194,15 @@ class Api:
         # Map SQLAlchemy types to Flask-RESTX field types
         type_name = column_type.__class__.__name__.lower()
 
+        # Special handling for ARRAY types
+        if type_name == "array":
+            # Get the SQLAlchemy type of array elements
+            item_type = column_type.item_type
+            # Recursively map the item type to a Flask-RESTX field
+            item_field = self._map_sqlalchemy_type_to_restx_field(item_type, True)
+            # Create a List field with the appropriate item field
+            return fields.List(item_field, required=not column_nullable)
+
         # Define mappings from SQLAlchemy types to Flask-RESTX fields
         type_map = {
             "integer": fields.Integer,
@@ -212,7 +221,6 @@ class Api:
             "enum": fields.String,
             "json": fields.Raw,
             "jsonb": fields.Raw,
-            "array": fields.List(fields.Raw),
             "largebinary": fields.String,
             "blob": fields.String,
             "binary": fields.String,

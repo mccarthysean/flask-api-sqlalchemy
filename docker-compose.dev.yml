@@ -1,3 +1,4 @@
+# docker-compose.dev.yml
 services:
   dev_container:
     build:
@@ -8,3 +9,13 @@ services:
     env_file: .env
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: test_db
+      # POSTGRES_PORT: 5435
+    ports:
+      - 5435:5432
