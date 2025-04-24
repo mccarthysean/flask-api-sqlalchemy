@@ -457,7 +457,7 @@ class Api:
             create_collection_resource(model, model_name)
             create_item_resource(model, model_name)
 
-            logger.info(f"Created API endpoints for {model_name}")
+            # logger.debug(f"Created API endpoints for {model_name}")
 
 
 # src/flask_api_sqlalchemy/exceptions.py
