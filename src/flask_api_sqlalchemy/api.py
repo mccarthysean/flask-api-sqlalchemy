@@ -447,8 +447,13 @@ class Api:
 
                     # Only include delete method if deletion is not disabled
                     if not _disable_delete:
-                        @namespace.doc(f"delete_{inflection.singularize(resource_name)}")
-                        @namespace.response(HTTPStatus.NO_CONTENT, f"{model_name} deleted")
+
+                        @namespace.doc(
+                            f"delete_{inflection.singularize(resource_name)}"
+                        )
+                        @namespace.response(
+                            HTTPStatus.NO_CONTENT, f"{model_name} deleted"
+                        )
                         def delete(self, id):
                             """Delete a specific resource."""
                             # Use session query instead of model.query

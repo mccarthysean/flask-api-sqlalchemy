@@ -7,12 +7,11 @@ import random
 import string
 
 from flask import Flask, render_template_string
+from flask_api_sqlalchemy import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-from flask_api_sqlalchemy import Api
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
