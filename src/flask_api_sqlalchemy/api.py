@@ -53,6 +53,7 @@ class Api:
         serve_challenge_on_401: Optional[bool] = False,
         format_checker: Optional[Any] = None,
         url_scheme: Optional[str] = None,
+        want_logs: bool = False,
         **kwargs,
     ) -> None:
         """Initialize the API extension.
@@ -92,6 +93,7 @@ class Api:
         self.serve_challenge_on_401 = serve_challenge_on_401
         self.format_checker = format_checker
         self.url_scheme = url_scheme
+        self.want_logs = want_logs
         self.kwargs = kwargs
 
         self._api = None  # Flask-RESTX API instance
@@ -284,7 +286,8 @@ class Api:
             # Add namespace to API
             self.api.add_namespace(namespace)
 
-            # logger.info(f"Generated API model for {model_name}")
+            if self.want_logs:
+                logger.info(f"Created API model for {model_name}")
 
     def _create_endpoints(self) -> None:
         """Create API endpoints for each model."""
@@ -316,6 +319,7 @@ class Api:
                     # Store model references securely
                     _model = model
                     _model_name = model_name
+                    want_logs = self.want_logs
 
                     @namespace.doc(f"list_{resource_name}")
                     @namespace.marshal_list_with(api_model)
@@ -329,7 +333,8 @@ class Api:
                     @namespace.marshal_with(api_model, code=HTTPStatus.CREATED)
                     def post(self):
                         """Create a new resource."""
-                        logger.debug(f"Creating a new {self._model_name} instance")
+                        if self.want_logs:
+                            logger.info(f"Creating a new {self._model_name} instance")
 
                         # Get request data
                         data = namespace.payload
@@ -390,6 +395,7 @@ class Api:
                     # Store model references securely
                     _model = model
                     _model_name = model_name
+                    want_logs = self.want_logs
 
                     @namespace.doc(f"get_{inflection.singularize(resource_name)}")
                     @namespace.marshal_with(api_model)
@@ -408,7 +414,9 @@ class Api:
                     @namespace.marshal_with(api_model)
                     def put(self, id):
                         """Update a specific resource."""
-                        logger.debug(f"Updating {self._model_name} with id {id}")
+                        if self.want_logs:
+                            logger.debug(f"Updating {self._model_name} with id {id}")
+
                         instance = db.session.query(self._model).get(id)
 
                         if not instance:
@@ -455,24 +463,5 @@ class Api:
             create_collection_resource(model, model_name)
             create_item_resource(model, model_name)
 
-            # logger.debug(f"Created API endpoints for {model_name}")
-
-
-# src/flask_api_sqlalchemy/exceptions.py
-# Custom exceptions for the extension
-class ApiError(Exception):
-    """Base exception for API-related errors."""
-
-    pass
-
-
-class ModelDiscoveryError(ApiError):
-    """Exception raised when model discovery fails."""
-
-    pass
-
-
-class ModelMappingError(ApiError):
-    """Exception raised when model mapping fails."""
-
-    pass
+            if self.want_logs:
+                logger.info(f"Created endpoints for {model_name}")
