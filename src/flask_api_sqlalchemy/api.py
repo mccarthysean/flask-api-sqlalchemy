@@ -32,7 +32,7 @@ class Api:
         title: Optional[str] = None,
         description: Optional[str] = None,
         version: Optional[str] = None,
-        prefix: Optional[str] = "",
+        prefix: Optional[str] = "/api",
         default: Optional[str] = "default",
         default_label: Optional[str] = "Default namespace",
         default_id: Optional[str] = None,
@@ -116,7 +116,7 @@ class Api:
         self.db = db
 
         # Create API blueprint
-        self.blueprint = Blueprint("api", __name__, url_prefix="/api")
+        self.blueprint = Blueprint("SQLAlchemy API", __name__, url_prefix=self.prefix)
 
         # Create Flask-RESTX API
         self.api = RestxApi(
