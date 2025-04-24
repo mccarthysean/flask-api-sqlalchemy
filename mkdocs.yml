@@ -1,5 +1,5 @@
 site_name: flask-api-sqlalchemy
-site_description: Generate responsive images for your website, so you can use srcset in your <img> tags and serve an optimal image to each device that views your site.
+site_description: Flask extension for automatically generating RESTful APIs from SQLAlchemy models
 site_url: https://mccarthysean.dev/flask-api-sqlalchemy
 repo_name: mccarthysean/flask-api-sqlalchemy
 repo_url: https://github.com/mccarthysean/flask-api-sqlalchemy
