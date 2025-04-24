@@ -169,7 +169,8 @@ class Api:
         for cls in self.db.Model.__subclasses__():
             model_name = cls.__name__
             if model_name != "Base" and not model_name.startswith("_"):
-                logger.info(f"Discovered model: {model_name}")
+                if self.want_logs:
+                    logger.info(f"Discovered model: {model_name}")
                 models[model_name] = cls
 
         # Store discovered models
